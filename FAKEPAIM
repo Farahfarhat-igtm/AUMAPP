@@ -1,0 +1,96 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class FakePaymentActivity extends AppCompatActivity {
+
+    Button btnPayer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fake_payment);
+
+        btnPayer = findViewById(R.id.btnPayer);
+
+        btnPayer.setOnClickListener(v -> {
+
+            Toast.makeText(this, "Paiement en cours...", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(() -> {
+
+                Toast.makeText(this, "Paiement réussi ✔", Toast.LENGTH_SHORT).show();
+
+                // رجوع لـ PaiementActivity
+                Intent i = new Intent(FakePaymentActivity.this, PaiementActivity.class);
+                startActivity(i);
+                finish();
+
+            }, 2000);
+        });
+    }
+}    
+   <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#EAF6FF">
+
+    <!-- TITLE -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PAIEMENT SIMULATION"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#1565C0"
+        android:layout_marginBottom="30dp"/>
+
+    <!-- CARD BOX -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:background="#1E3A5F"
+        android:padding="20dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Carte sélectionnée"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="**** **** **** 4444"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+    <!-- BUTTON PAY -->
+    <Button
+        android:id="@+id/btnPayer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="PAYER 360 DH"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#2E7D32"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
