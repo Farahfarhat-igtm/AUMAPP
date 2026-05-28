@@ -1,0 +1,20 @@
+package com.example.aum;
+
+public class DossierData {
+
+    public static String cin = "";
+    public static String nom = "";
+    public static String prenom = "";
+    public static String telephone = "";
+    public static String civilite = "";
+
+    public static String numero_dossier = "";
+    public static String surface_terrain = "";
+    public static String adresse_localisation = "";
+    public static String latitude = "";
+    public static String longitude = "";
+
+    public static String pdf1 = "";
+    public static String pdf2 = "";
+    public static String cinImage = "";
+}
