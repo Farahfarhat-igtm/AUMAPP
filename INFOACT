@@ -1,0 +1,224 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.*;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class InfoActivity extends AppCompatActivity {
+
+    EditText etCin, etNom, etPrenom, etTel;
+    AutoCompleteTextView etCivilite;
+    Button btnNext;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_info);
+
+        etCin = findViewById(R.id.etCin);
+        etNom = findViewById(R.id.etNom);
+        etPrenom = findViewById(R.id.etPrenom);
+        etTel = findViewById(R.id.etTel);
+        etCivilite = findViewById(R.id.etCivilite);
+        btnNext = findViewById(R.id.btnValider);
+
+        btnNext.setOnClickListener(v -> {
+
+            DossierData.cin = etCin.getText().toString().trim();
+            DossierData.nom = etNom.getText().toString().trim();
+            DossierData.prenom = etPrenom.getText().toString().trim();
+            DossierData.telephone = etTel.getText().toString().trim();
+            DossierData.civilite = etCivilite.getText().toString().trim();
+
+            startActivity(new Intent(this, TerrainActivity.class));
+        });
+    }
+}   
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <!-- IMAGE -->
+        <ImageView
+            android:id="@+id/imgRegister"
+            android:layout_width="300dp"
+            android:layout_height="207dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/op" />
+
+        <!-- TITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complete Profile"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#1F2937"
+            android:layout_marginTop="10dp"/>
+
+        <!-- SUBTITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please enter your information"
+            android:textSize="14sp"
+            android:textColor="#6B7280"
+            android:layout_marginBottom="25dp"/>
+
+        <!-- CIN -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_myplaces"/>
+
+            <EditText
+                android:id="@+id/etCin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="CIN"
+                android:background="@null"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- NOM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_edit"/>
+
+            <EditText
+                android:id="@+id/etNom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nom"
+                android:background="@null"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- PRENOM -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_edit"/>
+
+            <EditText
+                android:id="@+id/etPrenom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Prenom"
+                android:background="@null"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- PHONE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_call"/>
+
+            <EditText
+                android:id="@+id/etTel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number"
+                android:inputType="phone"
+                android:background="@null"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- CIVILITE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_marginBottom="25dp"
+            android:elevation="2dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_sort_by_size"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/etCivilite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Civilite"
+                android:background="@null"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- BUTTON -->
+        <Button
+            android:id="@+id/btnValider"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="#003785"
+            android:text="VALIDER"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</ScrollView>
