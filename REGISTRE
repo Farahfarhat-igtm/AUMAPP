@@ -1,0 +1,148 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+import okhttp3.*;
+
+public class PaiementActivity extends AppCompatActivity {
+
+    Button btnValider, btnOpenPayment;
+
+    OkHttpClient client = new OkHttpClient();
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_paiement);
+
+        btnValider = findViewById(R.id.btnValider);
+        btnOpenPayment = findViewById(R.id.btnOpenPayment);
+
+        btnOpenPayment.setOnClickListener(v ->
+                startActivity(new Intent(this, FakePaymentActivity.class))
+        );
+
+        btnValider.setOnClickListener(v -> upload());
+    }
+
+    private void upload() {
+
+        new Thread(() -> {
+
+            try {
+
+                MultipartBody.Builder builder = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM);
+
+                // TEXT (MATCH DB EXACT)
+                builder.addFormDataPart("cin", DossierData.cin);
+                builder.addFormDataPart("nom", DossierData.nom);
+                builder.addFormDataPart("prenom", DossierData.prenom);
+                builder.addFormDataPart("telephone", DossierData.telephone);
+                builder.addFormDataPart("civilite", DossierData.civilite);
+
+                builder.addFormDataPart("numero_dossier", DossierData.numero_dossier);
+                builder.addFormDataPart("surface_terrain", DossierData.surface_terrain);
+                builder.addFormDataPart("adresse_localisation", DossierData.adresse_localisation);
+                builder.addFormDataPart("latitude", DossierData.latitude);
+                builder.addFormDataPart("longitude", DossierData.longitude);
+
+                // FILES (MATCH MYSQL EXACT)
+
+                builder.addFormDataPart("pdf_demande", "pdf1.pdf",
+                        RequestBody.create(
+                                FileUtil.getBytes(this, Uri.parse(DossierData.pdf1)),
+                                MediaType.parse("application/pdf")
+                        )
+                );
+
+                builder.addFormDataPart("pdf_autre", "pdf2.pdf",
+                        RequestBody.create(
+                                FileUtil.getBytes(this, Uri.parse(DossierData.pdf2)),
+                                MediaType.parse("application/pdf")
+                        )
+                );
+
+                builder.addFormDataPart("scan_cin", "cin.jpg",
+                        RequestBody.create(
+                                FileUtil.getBytes(this, Uri.parse(DossierData.cinImage)),
+                                MediaType.parse("image/jpeg")
+                        )
+                );
+
+                Request request = new Request.Builder()
+                        .url("http://10.0.2.2/aum_api/upload_dossier.php")
+                        .post(builder.build())
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                String result = response.body() != null ? response.body().string() : "NO RESPONSE";
+
+                runOnUiThread(() ->
+                        Toast.makeText(this, result, Toast.LENGTH_LONG).show()
+                );
+
+            } catch (Exception e) {
+
+                runOnUiThread(() ->
+                        Toast.makeText(this, "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
+            }
+
+        }).start();
+    }
+}  
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F4F8FF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PAIEMENT"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#1565C0"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Montant : 360 DH"
+        android:textSize="22sp"
+        android:layout_marginTop="16dp"
+        android:textColor="#000"/>
+
+    <Button
+        android:id="@+id/btnOpenPayment"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="OUVRIR PAIEMENT"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#1565C0"
+        android:textColor="#FFF"/>
+
+    <Button
+        android:id="@+id/btnValider"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="VALIDER"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#2E7D32"
+        android:textColor="#FFF"/>
+
+</LinearLayout>
