@@ -1,0 +1,112 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class ScannerActivity extends AppCompatActivity {
+
+    ActivityResultLauncher<Intent> launcher;
+    TextView txtStatus;
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        setContentView(R.layout.activity_scanner);
+
+        Button btn = findViewById(R.id.btnAttach);
+        Button next = findViewById(R.id.btnValider);
+        txtStatus = findViewById(R.id.txtStatus);
+
+        next.setVisibility(Button.GONE);
+
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+
+                        Uri uri = result.getData().getData();
+
+                        DossierData.pdf1 = uri.toString();
+
+                        txtStatus.setText("PDF 1 SELECTED ✔");
+                        next.setVisibility(Button.VISIBLE);
+                    }
+                }
+        );
+
+        btn.setOnClickListener(v -> {
+
+            Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            i.setType("application/pdf");
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+
+            launcher.launch(i);
+        });
+
+        next.setOnClickListener(v ->
+                startActivity(new Intent(this, UploadDocumentActivity.class))
+        );
+    }
+}
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <!-- LOGO -->
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="345dp"
+        android:layout_height="228dp"
+        android:layout_marginBottom="25dp"
+        android:contentDescription="Logo"
+        android:src="@drawable/s" />
+
+    <Button
+        android:id="@+id/btnScanner"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="SCAN DOCUMENT"
+        android:backgroundTint="#77B5FE"/>
+
+    <Button
+        android:id="@+id/btnAttach"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="ATTACH FILE"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#77B5FE"/>
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No file selected"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnValider"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="VALIDER"
+        android:layout_marginTop="25dp"
+        android:backgroundTint="#77B5FE"/>
+</LinearLayout>
