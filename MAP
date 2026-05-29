@@ -1,0 +1,181 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+
+import java.util.List;
+import java.util.Locale;
+
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    GoogleMap map;
+
+    EditText etSearch;
+    Button btnSearch, btnConfirm;
+
+    LatLng selectedLocation;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+
+        etSearch = findViewById(R.id.etSearch);
+        btnSearch = findViewById(R.id.btnSearch);
+        btnConfirm = findViewById(R.id.btnConfirm);
+
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
+        btnSearch.setOnClickListener(v -> searchLocation());
+
+        btnConfirm.setOnClickListener(v -> sendResult()
+        );
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        map = googleMap;
+
+        LatLng defaultLoc = new LatLng(31.6295, -7.9811);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLoc, 12));
+
+        map.setOnMapClickListener(latLng -> {
+            selectedLocation = latLng;
+            map.clear();
+            map.addMarker(new MarkerOptions().position(latLng));
+        });
+    }
+
+    private void searchLocation() {
+
+        if (map == null) return;
+
+        String name = etSearch.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Enter location", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+            List<android.location.Address> list =
+                    geocoder.getFromLocationName(name + ", Morocco", 1);
+
+            if (!list.isEmpty()) {
+
+                android.location.Address address = list.get(0);
+
+                selectedLocation = new LatLng(
+                        address.getLatitude(),
+                        address.getLongitude()
+                );
+
+                map.clear();
+                map.addMarker(new MarkerOptions().position(selectedLocation));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 15));
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Search error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendResult() {
+
+        if (selectedLocation == null) {
+            Toast.makeText(this, "Select location first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent();
+
+        // 🔥 IMPORTANT: double values
+        intent.putExtra("lat", selectedLocation.latitude);
+        intent.putExtra("lng", selectedLocation.longitude);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+}
+
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- MAP -->
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- SEARCH BAR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_margin="18dp"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@android:drawable/ic_menu_search" />
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Search in Marrakech"
+            android:textColor="#000000"
+            android:textColorHint="#777777"
+            android:background="@android:color/transparent"
+            android:paddingStart="10dp" />
+    </LinearLayout>
+
+    <!-- SEARCH BUTTON -->
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="Search"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="20dp"
+        android:background="#6C63FF"
+        android:textColor="#FFFFFF" />
+
+    <!-- CONFIRM BUTTON -->
+    <Button
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Confirm Location"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="#003785"
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp" />
+
+</FrameLayout>
