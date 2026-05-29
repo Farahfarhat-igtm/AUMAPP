@@ -1,0 +1,176 @@
+package com.example.aum;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class LoginActivity extends AppCompatActivity {
+
+    EditText etEmail, etPassword;
+    Button btnLogin;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(v -> {
+
+            String email = etEmail.getText().toString().trim();
+            String pass = etPassword.getText().toString().trim();
+
+            if (email.isEmpty() || pass.isEmpty()) {
+
+                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                Toast.makeText(this, "Login OK ✔", Toast.LENGTH_SHORT).show();
+
+                // 🚀 go to Informations page
+                Intent intent = new Intent(LoginActivity.this, InfoActivity.class);
+                startActivity(intent);
+
+                finish(); // باش ما يرجعش ل login
+            }
+        });
+    }
+}
+
+
+
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5B6DFF">
+
+    <!-- MAIN CARD -->
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:background="#FFFFFF"
+        android:elevation="10dp">
+
+        <!-- LOGO -->
+        <ImageView
+            android:layout_width="212dp"
+            android:layout_height="108dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/y" />
+
+        <!-- TITLE -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#222222"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"/>
+
+        <!-- EMAIL LABEL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textStyle="bold"
+            android:textColor="#444444"
+            android:layout_marginBottom="5dp"/>
+
+        <!-- EMAIL INPUT -->
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your email"
+            android:paddingLeft="15dp"
+            android:backgroundTint="#CCCCCC"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- PASSWORD LABEL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textStyle="bold"
+            android:textColor="#444444"
+            android:layout_marginBottom="5dp"/>
+
+        <!-- PASSWORD INPUT -->
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            android:paddingLeft="15dp"
+            android:backgroundTint="#CCCCCC"
+            android:layout_marginBottom="25dp"/>
+
+        <!-- LOGIN BUTTON -->
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Log In"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:backgroundTint="#5B6DFF"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- OR -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="or continue with"
+            android:textColor="#777777"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- SOCIAL -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/google"
+                android:layout_marginRight="15dp"/>
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/facebook"/>
+        </LinearLayout>
+
+        <!-- SIGN UP -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not registered yet? Sign Up"
+            android:textColor="#555555"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
